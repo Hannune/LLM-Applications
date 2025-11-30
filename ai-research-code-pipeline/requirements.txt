@@ -1,0 +1,8 @@
+langgraph>=0.0.40
+langchain>=0.1.0
+langchain-openai>=0.0.5
+langchain-core>=0.1.0
+gpt-researcher>=0.7.0
+open-interpreter>=0.2.0
+python-dotenv>=1.0.0
+finance-datareader>=0.9.0
