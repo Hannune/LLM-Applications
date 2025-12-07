@@ -106,6 +106,100 @@ print(analysis.content)
 
 ---
 
+### 🤖 [agent-integration-examples](./agent-integration-examples/)
+**Production-ready integration patterns for routers, MCP tools, and A2A workflows**
+
+Comprehensive examples showing how to integrate all the LLM components: task routing, MCP tool usage, and agent-to-agent communication. Everything runs with LOCAL LLMs and zero API costs.
+
+**Examples Included:**
+1. **Router Examples** - LangGraph router for intelligent task delegation
+2. **MCP Tools Integration** - Using GDELT, n8n, and other services as LangChain tools
+3. **A2A Workflows** - Multi-agent collaboration patterns
+4. **Full Pipeline** - Complete end-to-end integration
+
+**Architecture:**
+```
+User Input → Router (classify task)
+    ↓
+[🔍 Research Agent] → GDELT Service
+[📊 Analysis Agent] → LOCAL LLM
+[💻 Coding Agent] → LOCAL LLM
+[✍️ Writing Agent] → LOCAL LLM
+    ↓
+ n8n A2A Coordination (if multi-agent)
+    ↓
+Final Result
+```
+
+**Example - LangGraph Router:**
+```python
+from langgraph.graph import StateGraph
+from langchain_ollama import ChatOllama
+
+# Define router that classifies and delegates
+graph = create_router_graph()
+
+# Automatically routes to appropriate agent
+result = graph.invoke({
+    "task": "Find recent news about AI"
+})
+# → Routes to research_agent → Uses GDELT → Returns articles
+```
+
+**Example - MCP Tools:**
+```python
+from langchain.agents import initialize_agent
+from langchain.tools import tool
+
+@tool
+def gdelt_search(query: str) -> str:
+    """Search global news"""
+    return requests.post("http://localhost:8004/search", ...).json()
+
+@tool  
+def n8n_workflow(task: str) -> str:
+    """Trigger agent workflow"""
+    return requests.post("http://localhost:8005/agent/task", ...).json()
+
+tools = [gdelt_search, n8n_workflow]
+agent = initialize_agent(tools, llm, verbose=True)
+result = agent.run("Research quantum computing")
+```
+
+**Example - A2A Multi-Agent:**
+```python
+# Agent 1: Research
+research = client.submit_agent_task(
+    agent_type="researcher",
+    task="Find quantum papers"
+)
+
+# Agent 2: Analysis (uses Agent 1 output)
+analysis = client.submit_agent_task(
+    agent_type="analyzer",
+    task="Analyze papers",
+    context={"papers": research['articles']}
+)
+
+# Agent 3: Write report
+report = client.submit_agent_task(
+    agent_type="writer",
+    task="Write summary",
+    context={"analysis": analysis}
+)
+```
+
+**Use Case**: Building production agent systems, learning integration patterns, template for new projects
+
+**Tech Stack:**
+- LangChain + LangGraph for agent orchestration
+- Ollama for LOCAL LLMs
+- GDELT collector for news data
+- n8n for agent-to-agent coordination
+- All components from llm-components repository
+
+---
+
 ## 🏗️ Application Architecture Comparison
 
 ### ai-research-code-pipeline (Agentic)
@@ -252,15 +346,15 @@ LLM_MODEL=qwen2.5:7b  # or llama3.1:8b, mistral:7b, etc.
 
 ## 📊 Application Comparison
 
-| Feature | ai-research-code-pipeline | korean-realestate-ai-pipeline |
-|---------|---------------------------|-------------------------------|
-| **Type** | Multi-agent workflow | Data analysis notebook |
-| **Complexity** | High | Medium |
-| **Setup Time** | 15 minutes | 10 minutes |
-| **Use Case** | Research + coding | Financial analysis |
-| **Interface** | Python script | Jupyter notebook |
-| **Output** | Code + docs | Insights + visualizations |
-| **Best For** | Automation, development | Analysis, research |
+| Feature | ai-research-code-pipeline | korean-realestate-ai-pipeline | agent-integration-examples |
+|---------|---------------------------|-------------------------------|----------------------------|
+| **Type** | Multi-agent workflow | Data analysis notebook | Integration patterns |
+| **Complexity** | High | Medium | Medium |
+| **Setup Time** | 15 minutes | 10 minutes | 20 minutes |
+| **Use Case** | Research + coding | Financial analysis | Learning + templates |
+| **Interface** | Python script | Jupyter notebook | Python examples |
+| **Output** | Code + docs | Insights + visualizations | Working code patterns |
+| **Best For** | Automation, development | Analysis, research | Building agent systems |
 
 ## 🛠️ Development
 
@@ -357,8 +451,8 @@ Built with:
 
 ## 🔗 Related Repositories
 
-**Infrastructure**: [local-llm-infrastructure](https://github.com/Hannune/Local-LLM-Infrastructure) - Deploy and manage local LLMs  
-**Components**: [llm-components](https://github.com/Hannune/LLM-Components) - Reusable building blocks
+**Infrastructure**: [local-llm-infrastructure](../local-llm-infrastructure/) - Deploy and manage local LLMs  
+**Components**: [llm-components](../llm-components/) - Reusable building blocks
 
 ---
 
