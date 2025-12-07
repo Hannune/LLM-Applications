@@ -451,8 +451,8 @@ Built with:
 
 ## 🔗 Related Repositories
 
-**Infrastructure**: [local-llm-infrastructure](../local-llm-infrastructure/) - Deploy and manage local LLMs  
-**Components**: [llm-components](../llm-components/) - Reusable building blocks
+**Infrastructure**: [local-llm-infrastructure](https://github.com/Hannune/Local-LLM-Infrastructure) - Deploy and manage local LLMs  
+**Components**: [llm-components](https://github.com/Hannune/LLM-Components) - Reusable building blocks
 
 ---
 
