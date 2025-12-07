@@ -16,16 +16,6 @@ Complete examples showing how to integrate all the components: GDELT collector, 
 - n8n workflow integration
 - Combining multiple MCP services
 
-### 3. A2A Workflows (`3-a2a-workflows/`)
-- Multi-agent collaboration patterns
-- Webhook-based communication
-- Agent chaining and callbacks
-
-### 4. Full Pipeline (`4-full-pipeline/`)
-- Complete end-to-end example
-- Router → MCP Tools → A2A → Results
-- Production-ready architecture
-
 ## 📦 Prerequisites
 
 ### Services Required
@@ -83,30 +73,6 @@ python 2-mcp-tools-examples/mcp_tools_agent.py
 - Agent decides which tool to use
 - Combines results from multiple sources
 
-### Example 3: A2A Workflow
-
-```bash
-python 3-a2a-workflows/multi_agent_pipeline.py
-```
-
-**What it does:**
-- Agent A: Researches topic via GDELT
-- Agent B: Analyzes results (triggered via n8n)
-- Agent C: Writes summary
-- All coordinated through webhooks
-
-### Example 4: Full Pipeline
-
-```bash
-python 4-full-pipeline/complete_system.py
-```
-
-**What it does:**
-- Complete production example
-- Router classifies task
-- Delegates to MCP tools
-- Coordinates via n8n A2A
-- Returns final result
 
 ## 📖 Detailed Examples
 
@@ -167,32 +133,6 @@ agent = initialize_agent(tools, llm, verbose=True)
 result = agent.run("Research quantum computing news")
 ```
 
-### A2A with Callbacks
-
-```python
-import requests
-from flask import Flask, request
-
-app = Flask(__name__)
-
-# Your callback endpoint
-@app.route("/webhook/results", methods=["POST"])
-def handle_results():
-    data = request.json
-    print(f"Agent completed: {data}")
-    # Process results...
-    return {"status": "received"}
-
-# Start callback server
-app.run(port=9000)
-
-# Submit task with callback
-requests.post("http://localhost:8005/agent/task", json={
-    "agent_type": "researcher",
-    "task": "Long-running research task",
-    "callback_url": "http://localhost:9000/webhook/results"
-})
-```
 
 ## 🏗️ Architecture Patterns
 
@@ -206,18 +146,6 @@ User Input → Router → Specialized Agent → Result
 
 ```
 User Input → Agent → [Tool1, Tool2, Tool3] → Result
-```
-
-### Pattern 3: Multi-Agent A2A
-
-```
-Agent A (Research) → n8n → Agent B (Analysis) → Agent C (Writing) → Result
-```
-
-### Pattern 4: Full Pipeline
-
-```
-Input → Router → Tools → A2A Coordination → Aggregator → Final Result
 ```
 
 ## 🔧 Configuration
@@ -241,66 +169,6 @@ MAX_ITERATIONS=10
 TIMEOUT=300
 ```
 
-### Service Ports
-
-| Service | Port | Description |
-|---------|------|-------------|
-| Ollama | 11434 | LOCAL LLM |
-| GDELT | 8004 | News search |
-| n8n | 5678 | Workflow engine |
-| A2A Wrapper | 8005 | Agent coordination |
-| GPT Researcher | 8002 | Research service |
-
-## 💡 Best Practices
-
-### 1. Error Handling
-
-```python
-def safe_tool_call(tool_func, *args, **kwargs):
-    try:
-        return tool_func(*args, **kwargs)
-    except requests.Timeout:
-        return {"error": "Service timeout"}
-    except Exception as e:
-        return {"error": str(e)}
-```
-
-### 2. Async Operations
-
-```python
-import asyncio
-
-async def parallel_agents():
-    tasks = [
-        asyncio.create_task(research_agent()),
-        asyncio.create_task(analysis_agent()),
-    ]
-    results = await asyncio.gather(*tasks)
-    return results
-```
-
-### 3. Caching Results
-
-```python
-from functools import lru_cache
-
-@lru_cache(maxsize=100)
-def cached_gdelt_search(query: str, timespan: str):
-    return requests.post(...)
-```
-
-### 4. Monitoring
-
-```python
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-logger.info(f"Task classified as: {task_type}")
-logger.info(f"Agent {agent_name} activated")
-logger.info(f"Result: {result[:100]}...")
-```
 
 ## 🐛 Troubleshooting
 
@@ -347,25 +215,6 @@ your_existing_agent.tools.extend([
 ])
 ```
 
-### With CrewAI
-
-```python
-from crewai import Agent, Task, Crew
-
-researcher = Agent(
-    role="Researcher",
-    goal="Find latest news",
-    tools=[gdelt_news_search]
-)
-
-analyst = Agent(
-    role="Analyst",
-    goal="Analyze findings"
-)
-
-crew = Crew(agents=[researcher, analyst])
-result = crew.kickoff()
-```
 
 ### With Custom Frameworks
 

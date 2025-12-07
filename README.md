@@ -107,15 +107,13 @@ print(analysis.content)
 ---
 
 ### 🤖 [agent-integration-examples](./agent-integration-examples/)
-**Production-ready integration patterns for routers, MCP tools, and A2A workflows**
+**Production-ready integration patterns for routers, MCP tools**
 
 Comprehensive examples showing how to integrate all the LLM components: task routing, MCP tool usage, and agent-to-agent communication. Everything runs with LOCAL LLMs and zero API costs.
 
 **Examples Included:**
 1. **Router Examples** - LangGraph router for intelligent task delegation
 2. **MCP Tools Integration** - Using GDELT, n8n, and other services as LangChain tools
-3. **A2A Workflows** - Multi-agent collaboration patterns
-4. **Full Pipeline** - Complete end-to-end integration
 
 **Architecture:**
 ```
@@ -166,28 +164,6 @@ agent = initialize_agent(tools, llm, verbose=True)
 result = agent.run("Research quantum computing")
 ```
 
-**Example - A2A Multi-Agent:**
-```python
-# Agent 1: Research
-research = client.submit_agent_task(
-    agent_type="researcher",
-    task="Find quantum papers"
-)
-
-# Agent 2: Analysis (uses Agent 1 output)
-analysis = client.submit_agent_task(
-    agent_type="analyzer",
-    task="Analyze papers",
-    context={"papers": research['articles']}
-)
-
-# Agent 3: Write report
-report = client.submit_agent_task(
-    agent_type="writer",
-    task="Write summary",
-    context={"analysis": analysis}
-)
-```
 
 **Use Case**: Building production agent systems, learning integration patterns, template for new projects
 
@@ -344,17 +320,6 @@ OPENAI_API_KEY=EMPTY
 LLM_MODEL=qwen2.5:7b  # or llama3.1:8b, mistral:7b, etc.
 ```
 
-## 📊 Application Comparison
-
-| Feature | ai-research-code-pipeline | korean-realestate-ai-pipeline | agent-integration-examples |
-|---------|---------------------------|-------------------------------|----------------------------|
-| **Type** | Multi-agent workflow | Data analysis notebook | Integration patterns |
-| **Complexity** | High | Medium | Medium |
-| **Setup Time** | 15 minutes | 10 minutes | 20 minutes |
-| **Use Case** | Research + coding | Financial analysis | Learning + templates |
-| **Interface** | Python script | Jupyter notebook | Python examples |
-| **Output** | Code + docs | Insights + visualizations | Working code patterns |
-| **Best For** | Automation, development | Analysis, research | Building agent systems |
 
 ## 🛠️ Development
 
